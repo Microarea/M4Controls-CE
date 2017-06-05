@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{73492F46-9C28-4130-9EEC-9C3C4AA9474F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M4ControlsParser", "M4ControlsParser\M4ControlsParser.csproj", "{2CC072F6-8924-4A60-B5AB-D80071269606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M4ControlsExplorer", "M4ControlsExplorer\M4ControlsExplorer.csproj", "{053E1D1D-20D8-4FF2-9BE9-65B1C699D4EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M4ControlsDBMaker", "M4ControlsDBMaker\M4ControlsDBMaker.csproj", "{6403F8CD-3273-49D3-99B8-75636F2302EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CC072F6-8924-4A60-B5AB-D80071269606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CC072F6-8924-4A60-B5AB-D80071269606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CC072F6-8924-4A60-B5AB-D80071269606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CC072F6-8924-4A60-B5AB-D80071269606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{053E1D1D-20D8-4FF2-9BE9-65B1C699D4EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053E1D1D-20D8-4FF2-9BE9-65B1C699D4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053E1D1D-20D8-4FF2-9BE9-65B1C699D4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053E1D1D-20D8-4FF2-9BE9-65B1C699D4EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6403F8CD-3273-49D3-99B8-75636F2302EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6403F8CD-3273-49D3-99B8-75636F2302EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6403F8CD-3273-49D3-99B8-75636F2302EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6403F8CD-3273-49D3-99B8-75636F2302EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
