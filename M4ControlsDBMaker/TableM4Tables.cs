@@ -15,7 +15,7 @@ namespace M4ControlsDBMaker
 
         public static bool Create()
         {
-            return SQLServerManagemant.ExecuteNonQuery(create) >= 0;
+            return SQLServerManagement.ExecuteNonQuery(create) >= 0;
         }
 
         public static bool IsEmpty()
@@ -24,9 +24,9 @@ namespace M4ControlsDBMaker
 
             string query = "SELECT [TableName] FROM [Tables]";
 
-            if (SQLServerManagemant.ExecuteReader(query, null) != null)
-                e = !SQLServerManagemant.Read();
-            SQLServerManagemant.ReaderClose();
+            if (SQLServerManagement.ExecuteReader(query, null) != null)
+                e = !SQLServerManagement.Read();
+            SQLServerManagement.ReaderClose();
 
             return e;
         }
@@ -39,12 +39,12 @@ namespace M4ControlsDBMaker
 
             string query = "SELECT [ParentTableName] FROM [Tables] WHERE [TableName] = @Table";
 
-            if (SQLServerManagemant.ExecuteReader(query, param) != null)
+            if (SQLServerManagement.ExecuteReader(query, param) != null)
             {
-                while (SQLServerManagemant.Read())
-                    v = SQLServerManagemant.GetValue<string>("ParentTableName");
+                while (SQLServerManagement.Read())
+                    v = SQLServerManagement.GetValue<string>("ParentTableName");
             }
-            SQLServerManagemant.ReaderClose();
+            SQLServerManagement.ReaderClose();
 
             return v;
         }
@@ -58,12 +58,12 @@ namespace M4ControlsDBMaker
 
             string query = string.Format("INSERT INTO [Tables] ([ParentTableName], [TableName]) VALUES ( @ParentTable, @Table)");
 
-            return SQLServerManagemant.ExecuteNonQuery(query, param);
+            return SQLServerManagement.ExecuteNonQuery(query, param);
         }
         public static int Delete()
         {
             string query = "DELETE FROM [Tables]";
-            return SQLServerManagemant.ExecuteNonQuery(query);
+            return SQLServerManagement.ExecuteNonQuery(query);
         }
     }
 }

@@ -1007,7 +1007,7 @@ namespace M4ControlsExplorer
             if (lvControls.SelectedIndices.Count <= 0)
                 return;
             DBTFild refactor =new DBTFild(lvControls, mControls);
-            if(refactor.ShowDialog(this) == DialogResult.OK);
+            refactor.ShowDialog(this);
         }
 
         private void commitToolStripMenuItem_Click(object sender, EventArgs e)

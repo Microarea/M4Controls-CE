@@ -16,23 +16,23 @@ namespace M4ControlsDBMaker
 
         public bool ExistDB()
         {
-            return SQLServerManagemant.ExistDB();
+            return SQLServerManagement.ExistDB();
         }
 
         public bool Create()
         {
-           return string.IsNullOrEmpty(mDBName) ? false : SQLServerManagemant.CreateDB(mDBName);
+           return string.IsNullOrEmpty(mDBName) ? false : SQLServerManagement.CreateDB(mDBName);
         }
 
         public bool Delete(bool deleteFild )
         {
-            return SQLServerManagemant.ClearDB(deleteFild);
+            return SQLServerManagement.ClearDB(deleteFild);
         }
 
 
         public bool Open()
         {
-            return string.IsNullOrEmpty(mDBName) ? false : SQLServerManagemant.OpenDB(mDBName);
+            return string.IsNullOrEmpty(mDBName) ? false : SQLServerManagement.OpenDB(mDBName);
         }
 
         // FIELDS

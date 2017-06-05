@@ -1450,7 +1450,8 @@ namespace M4ControlsParser
                 if (start > end)
                     return "";
                 macro =aText.Substring(start+2, end - start-2);
-            }catch(Exception e)
+            }
+            catch (Exception)
             {
                 macro = "";
             }

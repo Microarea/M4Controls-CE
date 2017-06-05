@@ -17,7 +17,7 @@ namespace M4ControlsDBMaker
 
         public static bool Create()
         {
-            return SQLServerManagemant.ExecuteNonQuery(create) >= 0;
+            return SQLServerManagement.ExecuteNonQuery(create) >= 0;
         }
 
         public static bool IsEmpty()
@@ -26,9 +26,9 @@ namespace M4ControlsDBMaker
 
             string query = "SELECT [FieldNamespace] FROM [Fields]";
 
-            if (SQLServerManagemant.ExecuteReader(query, null) != null)
-                e = !SQLServerManagemant.Read();
-            SQLServerManagemant.ReaderClose();
+            if (SQLServerManagement.ExecuteReader(query, null) != null)
+                e = !SQLServerManagement.Read();
+            SQLServerManagement.ReaderClose();
 
             return e;
         }
@@ -40,13 +40,13 @@ namespace M4ControlsDBMaker
             param.Add(new SqlParameter("Table", aTable));
             param.Add(new SqlParameter("Field", aField));
             string query = "SELECT [FieldNamespace] FROM [Fields] WHERE [TableName] = @Table AND [FieldName] = @Field";
-            SqlDataReader r = SQLServerManagemant.ExecuteReader(query, param);
+            SqlDataReader r = SQLServerManagement.ExecuteReader(query, param);
             if (r != null)
             {
                 while (r.Read())
                     v = (string)r["FieldNamespace"];
             }
-            SQLServerManagemant.ReaderClose();
+            SQLServerManagement.ReaderClose();
 
             return v;
         }
@@ -61,12 +61,12 @@ namespace M4ControlsDBMaker
 
             string query = string.Format("INSERT INTO [Fields] ([TableName], [FieldName], [FieldNamespace]) VALUES ( @Table, @Field, @FieldNamespace)");
 
-            return SQLServerManagemant.ExecuteNonQuery(query, param);
+            return SQLServerManagement.ExecuteNonQuery(query, param);
         }
         public static int Delete()
         {
             string query = "DELETE FROM [Fields]";
-            return SQLServerManagemant.ExecuteNonQuery(query);
+            return SQLServerManagement.ExecuteNonQuery(query);
         }
 
         

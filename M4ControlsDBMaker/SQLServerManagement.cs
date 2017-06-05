@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace M4ControlsDBMaker
 {
-    internal class SQLServerManagemant
+    internal class SQLServerManagement
     {
         private static SqlConnection conn = null;
         private static SqlDataReader reader;

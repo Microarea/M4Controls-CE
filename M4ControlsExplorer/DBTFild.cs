@@ -56,7 +56,6 @@ namespace M4ControlsExplorer
             public List<ListViewItem> LoadSelectedList()
             {
                 _CONTROL c = new _CONTROL();
-                ListViewItem lvp = null;
                 List<ListViewItem> controls = new List<ListViewItem>();
 
                 foreach (ListViewItem lvi in lvControls.SelectedItems)

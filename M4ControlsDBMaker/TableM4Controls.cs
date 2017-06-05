@@ -163,12 +163,12 @@ namespace M4ControlsDBMaker
 
             System.Diagnostics.Debug.WriteLine(("CONTROLS TABLE UPDATE:"+ cl._module.Trim()) + "," +cl._filename.Trim() + ","+ cl._class.Trim() + ", " + cl._idc.Trim());
 
-            return SQLServerManagemant.ExecuteNonQuery(update, param);
+            return SQLServerManagement.ExecuteNonQuery(update, param);
         }
         
         public static bool Create()
         {
-            return SQLServerManagemant.ExecuteNonQuery(create) >= 0;
+            return SQLServerManagement.ExecuteNonQuery(create) >= 0;
         }
 
         public static bool IsEmpty(string aModule, string aFilename = "")
@@ -182,9 +182,9 @@ namespace M4ControlsDBMaker
 
                 string query = "SELECT [IDC] FROM [Controls] WHERE [Module] = @Module";
 
-                if (SQLServerManagemant.ExecuteReader(query, paramiters) != null) 
-                    e = !SQLServerManagemant.Read();
-                SQLServerManagemant.ReaderClose();
+                if (SQLServerManagement.ExecuteReader(query, paramiters) != null) 
+                    e = !SQLServerManagement.Read();
+                SQLServerManagement.ReaderClose();
             }
             else
             {
@@ -193,9 +193,9 @@ namespace M4ControlsDBMaker
 
                 string query = "SELECT [IDC] FROM [Controls] WHERE [Module] = @Module AND [Filename] = @Filename";
 
-                if (SQLServerManagemant.ExecuteReader(query, paramiters) != null)
-                    e = !SQLServerManagemant.Read();
-                SQLServerManagemant.ReaderClose();
+                if (SQLServerManagement.ExecuteReader(query, paramiters) != null)
+                    e = !SQLServerManagement.Read();
+                SQLServerManagement.ReaderClose();
             }
             return e;
         }
@@ -210,12 +210,12 @@ namespace M4ControlsDBMaker
                 //string query = "SELECT * FROM [Controls] order by [order]";
                 string query = "SELECT * FROM [Controls] order by [Filename], [order]";
 
-                if (SQLServerManagemant.ExecuteReader(query, null) != null)
+                if (SQLServerManagement.ExecuteReader(query, null) != null)
                 {
-                    while (SQLServerManagemant.Read())
+                    while (SQLServerManagement.Read())
                         lc.Add(GetValue());
                 }
-                SQLServerManagemant.ReaderClose();
+                SQLServerManagement.ReaderClose();
             }
             else if (string.IsNullOrEmpty(aFilename))
             {
@@ -224,12 +224,12 @@ namespace M4ControlsDBMaker
 
                 string query = "SELECT * FROM [Controls] WHERE [TableName] = @module";
 
-                if (SQLServerManagemant.ExecuteReader(query, param) != null)
+                if (SQLServerManagement.ExecuteReader(query, param) != null)
                 {
-                    while (SQLServerManagemant.Read())
+                    while (SQLServerManagement.Read())
                         lc.Add(GetValue());
                 }
-                SQLServerManagemant.ReaderClose();
+                SQLServerManagement.ReaderClose();
             }
             else
             {                
@@ -238,12 +238,12 @@ namespace M4ControlsDBMaker
 
                 string query = "SELECT * FROM [Controls] WHERE [TableName] = @ControlClass AND [FieldName] = @Filename";
 
-                if (SQLServerManagemant.ExecuteReader(query, param) != null)
+                if (SQLServerManagement.ExecuteReader(query, param) != null)
                 {
-                    while (SQLServerManagemant.Read())
+                    while (SQLServerManagement.Read())
                         lc.Add(GetValue());
                 }
-                SQLServerManagemant.ReaderClose();
+                SQLServerManagement.ReaderClose();
             }
             return lc;
         }
@@ -252,38 +252,38 @@ namespace M4ControlsDBMaker
         {
             _CONTROL cl = new _CONTROL();
 
-            cl._module = SQLServerManagemant.GetValue<string>("Module");
-            cl._filename = SQLServerManagemant.GetValue<string>("Filename");
-            cl._class = SQLServerManagemant.GetValue<string>("Class");
-            cl._idc = SQLServerManagemant.GetValue<string>("IDC");
-            cl._generatejson = SQLServerManagemant.GetValue<bool>("GenerateJson");
-            cl._classidd = SQLServerManagemant.GetValue<string>("ClassIDD");
-            cl._tiletext = SQLServerManagemant.GetValue<string>("TileText");
-            cl._tilesize = SQLServerManagemant.GetValue<string>("TileSize");
-            cl._tilestyle = SQLServerManagemant.GetValue<int>("TileStyle");
-            cl._bodyeditidc = SQLServerManagemant.GetValue<string>("BodyEditIDC");
-            cl._bodyedittext = SQLServerManagemant.GetValue<string>("BodyEditText");
-            cl._namespace = SQLServerManagemant.GetValue<string>("Namespace");
-            cl._dbtpointer = SQLServerManagemant.GetValue<string>("DBTPointer");
-            cl._dbtnamespace = SQLServerManagemant.GetValue<string>("DBTNamespace");
-            cl._recordpointer = SQLServerManagemant.GetValue<string>("RecordPointer");
-            cl._recordclass = SQLServerManagemant.GetValue<string>("RecordClass");
-            cl._field = SQLServerManagemant.GetValue<string>("Field");
-            cl._fieldnamespace = SQLServerManagemant.GetValue<string>("FieldNamespace");
-            cl._text = SQLServerManagemant.GetValue<string>("Text");
-            cl._combotype = SQLServerManagemant.GetValue<string>("ComboType");
-            cl._runtimeclass = SQLServerManagemant.GetValue<string>("RuntimeClass");
-            cl._hkl = SQLServerManagemant.GetValue<string>("HotKeyLink");
-            cl._button = SQLServerManagemant.GetValue<string>("Button");
-            cl._isaddlink = SQLServerManagemant.GetValue<bool>("IsAddLink");
-            cl._order = SQLServerManagemant.GetValue<string>("Order");
-            cl._hidden = SQLServerManagemant.GetValue<bool>("Hidden");
-            cl._noChange_Grayed= SQLServerManagemant.GetValue<bool>("NoChange_Grayed");
-            cl._grayed = SQLServerManagemant.GetValue<bool>("Grayed");
-            cl._minValue = SQLServerManagemant.GetValue<string> ("MinValue");
-            cl._maxValue = SQLServerManagemant.GetValue<string> ("MaxValue");
-            cl._chars = SQLServerManagemant.GetValue<string>    ("Chars");
-            cl._rows = SQLServerManagemant.GetValue<string>     ("Rows");
+            cl._module = SQLServerManagement.GetValue<string>("Module");
+            cl._filename = SQLServerManagement.GetValue<string>("Filename");
+            cl._class = SQLServerManagement.GetValue<string>("Class");
+            cl._idc = SQLServerManagement.GetValue<string>("IDC");
+            cl._generatejson = SQLServerManagement.GetValue<bool>("GenerateJson");
+            cl._classidd = SQLServerManagement.GetValue<string>("ClassIDD");
+            cl._tiletext = SQLServerManagement.GetValue<string>("TileText");
+            cl._tilesize = SQLServerManagement.GetValue<string>("TileSize");
+            cl._tilestyle = SQLServerManagement.GetValue<int>("TileStyle");
+            cl._bodyeditidc = SQLServerManagement.GetValue<string>("BodyEditIDC");
+            cl._bodyedittext = SQLServerManagement.GetValue<string>("BodyEditText");
+            cl._namespace = SQLServerManagement.GetValue<string>("Namespace");
+            cl._dbtpointer = SQLServerManagement.GetValue<string>("DBTPointer");
+            cl._dbtnamespace = SQLServerManagement.GetValue<string>("DBTNamespace");
+            cl._recordpointer = SQLServerManagement.GetValue<string>("RecordPointer");
+            cl._recordclass = SQLServerManagement.GetValue<string>("RecordClass");
+            cl._field = SQLServerManagement.GetValue<string>("Field");
+            cl._fieldnamespace = SQLServerManagement.GetValue<string>("FieldNamespace");
+            cl._text = SQLServerManagement.GetValue<string>("Text");
+            cl._combotype = SQLServerManagement.GetValue<string>("ComboType");
+            cl._runtimeclass = SQLServerManagement.GetValue<string>("RuntimeClass");
+            cl._hkl = SQLServerManagement.GetValue<string>("HotKeyLink");
+            cl._button = SQLServerManagement.GetValue<string>("Button");
+            cl._isaddlink = SQLServerManagement.GetValue<bool>("IsAddLink");
+            cl._order = SQLServerManagement.GetValue<string>("Order");
+            cl._hidden = SQLServerManagement.GetValue<bool>("Hidden");
+            cl._noChange_Grayed= SQLServerManagement.GetValue<bool>("NoChange_Grayed");
+            cl._grayed = SQLServerManagement.GetValue<bool>("Grayed");
+            cl._minValue = SQLServerManagement.GetValue<string> ("MinValue");
+            cl._maxValue = SQLServerManagement.GetValue<string> ("MaxValue");
+            cl._chars = SQLServerManagement.GetValue<string>    ("Chars");
+            cl._rows = SQLServerManagement.GetValue<string>     ("Rows");
 
             return cl;
         }
@@ -328,7 +328,7 @@ namespace M4ControlsDBMaker
 
             System.Diagnostics.Debug.WriteLine("CONTROLS TABLE: " + cl._module + " " + cl._idc + " " + cl._filename + " " + cl._class);
             string query = string.Format(insert);
-            return SQLServerManagemant.ExecuteNonQuery(query, param);
+            return SQLServerManagement.ExecuteNonQuery(query, param);
         }
 
         public static int Delete(string aModule, string aFilename ="")
@@ -339,14 +339,14 @@ namespace M4ControlsDBMaker
                 param.Add(new SqlParameter("module", aModule.Trim()));
                 param.Add(new SqlParameter("filename", aFilename.Trim())); 
                 string query = "DELETE FROM [Controls] WHERE [Module] = @module";
-                return SQLServerManagemant.ExecuteNonQuery(query, param);
+                return SQLServerManagement.ExecuteNonQuery(query, param);
             }
             else
             {
                 param.Add(new SqlParameter("module", aModule.Trim()));
                 param.Add(new SqlParameter("filename", aFilename.Trim()));
                 string query = "DELETE FROM [Controls] WHERE [Module] = @module AND [Filename] = @filename";
-                return SQLServerManagemant.ExecuteNonQuery(query, param);
+                return SQLServerManagement.ExecuteNonQuery(query, param);
             }
         }
     }

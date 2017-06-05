@@ -50,7 +50,7 @@
     <Compile Include="DBManager.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLServerManagemant.cs" />
+    <Compile Include="SQLServerManagement.cs" />
     <Compile Include="TableM4ControlsClasses.cs" />
     <Compile Include="TableM4Fields.cs" />
     <Compile Include="TableM4Controls.cs" />
