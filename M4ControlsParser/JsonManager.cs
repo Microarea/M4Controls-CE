@@ -23,17 +23,17 @@ namespace M4ControlsParser
             mDB = aDB;
         }
 
-        public bool LoadJson(string aIDD, string aNamespace, string aTileSize, int aTileStyle, string aTileText, string aSourceFilename)
+        public bool LoadJson(string aIDD, string aNamespace, string aTileSize, int aTileStyle, string aTileText, string aSourceFilename, out string aJsonFilename)
         {
             mErrors.Clear();
             string aRootFolder = Path.GetDirectoryName(Path.GetDirectoryName(aSourceFilename));
             string aFileName = aIDD + ".tbjson";
 
-            string aFile = SearchJsonFile(aRootFolder, aFileName);
-            if (string.IsNullOrEmpty(aFile))
+            aJsonFilename = SearchJsonFile(aRootFolder, aFileName);
+            if (string.IsNullOrEmpty(aJsonFilename))
                 return false;
 
-            string j = File.ReadAllText(aFile);
+            string j = File.ReadAllText(aJsonFilename);
             if (string.IsNullOrEmpty(j))
                 return false;
 

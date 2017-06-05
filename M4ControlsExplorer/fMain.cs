@@ -599,16 +599,17 @@ namespace M4ControlsExplorer
                 MessageBox.Show(r.Item2 + "\r\n" + r.Item3);
             else
             {
-                fJson f = new fJson(mCurrentNode.Text, r.Item2, r.Item3);
+                fJson f = new fJson(mCurrentNode.Text, r.Item2, r.Item3, r.Item4);
                 f.ShowDialog(this);
             }
         }
 
-        public Tuple<bool, string, string> CreateJson(string aClass)
+        public Tuple<bool, string, string, string> CreateJson(string aClass)
         {
             bool bFound = false;
             bool bFirst = true;
             string errors = string.Empty;
+            string jsonFilename = string.Empty;
 
             JsonManager jm = new JsonManager(mDBManager);
 
@@ -632,10 +633,10 @@ namespace M4ControlsExplorer
                         if (string.IsNullOrEmpty(cl._filename))
                             errors += "Filename not found\r\n";
 
-                        if (!jm.LoadJson(cl._classidd, cl._namespace, cl._tilesize, cl._tilestyle, cl._tiletext, cl._filename))
+                        if (!jm.LoadJson(cl._classidd, cl._namespace, cl._tilesize, cl._tilestyle, cl._tiletext, cl._filename, out jsonFilename))
                         {
                             errors += "Error loading json";
-                            return new Tuple<bool, string, string>(true, cl._classidd, errors);
+                            return new Tuple<bool, string, string, string>(true, cl._classidd, errors, jsonFilename);
                         }
 
                         if (!cl._isaddlink)
@@ -648,7 +649,7 @@ namespace M4ControlsExplorer
                             if (!jm.CreateBodyEditBinding(cl._bodyeditidc, cl._dbtnamespace, cl._bodyedittext))
                             {
                                 errors += "Error creating BodyEdit binding\r\n";
-                                return new Tuple<bool, string, string>(true, aClass + " " + cl._bodyeditidc, errors);
+                                return new Tuple<bool, string, string, string>(true, aClass + " " + cl._bodyeditidc, errors, jsonFilename);
                             }
                         }
 
@@ -657,12 +658,12 @@ namespace M4ControlsExplorer
                     if (cl._isaddlink && !jm.CreateAddLinkBinding(cl._idc, cl._namespace, cl._fieldnamespace, cl._runtimeclass, cl._dbtnamespace, cl._minValue, cl._maxValue, cl._chars, cl._rows, cl._hkl, cl._button))
                     {
                         errors += "Error creating AddLink binding\r\n";
-                        return new Tuple<bool, string, string>(true, aClass + " " + cl._idc, errors);
+                        return new Tuple<bool, string, string, string>(true, aClass + " " + cl._idc, errors, jsonFilename);
                     }
                     else if (!cl._isaddlink && !jm.CreateAddColumn(cl._idc, cl._namespace, cl._fieldnamespace, cl._runtimeclass, cl._combotype == "0" ? string.Empty : cl._combotype, cl._text, cl._hidden, cl._grayed, cl._noChange_Grayed, cl._minValue, cl._maxValue, cl._chars, cl._rows, cl._hkl, cl._button))
                     {
                         errors += "Error creating AddColumn\r\n";
-                        return new Tuple<bool, string, string>(true, aClass + " " + cl._idc, errors);
+                        return new Tuple<bool, string, string, string>(true, aClass + " " + cl._idc, errors, jsonFilename);
                     }
                 }
             }
@@ -670,7 +671,7 @@ namespace M4ControlsExplorer
             if (!bFound)
             {
                 errors += "Class not found\r\n";
-                return new Tuple<bool, string, string>(true, aClass, errors);
+                return new Tuple<bool, string, string, string>(true, aClass, errors, jsonFilename);
             }
 
             errors += "OK!";
@@ -678,7 +679,7 @@ namespace M4ControlsExplorer
                 errors += "ERRORS:\r\n\r\n";
             foreach (string s in jm.GetErrors())
                 errors += s + "\r\n";
-            return new Tuple<bool, string, string>(false, jm.GetJson(), errors);
+            return new Tuple<bool, string, string, string>(false, jm.GetJson(), errors, jsonFilename);
         }
         #endregion
 
