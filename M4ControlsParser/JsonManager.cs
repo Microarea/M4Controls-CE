@@ -45,8 +45,9 @@ namespace M4ControlsParser
             mTokenJson.Remove("rcId");
             if (aTileStyle > 0)
                 SetProperty("tileStyle", aTileStyle);
-            SetProperty("type", 71);
-            
+            SetProperty("type", "Tile");
+
+
             mItemObjects = AllChildren(mTokenJson)
                         .First(c => c.Type == JTokenType.Array && c.Path.Contains("items"))
                         .Children<JObject>();
@@ -198,7 +199,7 @@ namespace M4ControlsParser
                     {
                         item["controlClass"] = "BodyEdit";
                         item["name"] = aBodyEditText;
-                        item["type"] = 18;
+                        item["type"] = "BodyEdit";
 
                         JObject jo = new JObject();
                         jo["datasource"] = aDBTNamespace;
@@ -242,7 +243,7 @@ namespace M4ControlsParser
             string aOkText = aText;
             aOkText = aOkText.Replace("\\n", "\n");//toglie doppio backslash
             
-            jo["type"] = 22;
+            jo["type"] = "ColTitle";
             jo["controlClass"] = aControlClass;
             jo["id"] = aIDC;
             jo["text"] = aOkText;
