@@ -1191,19 +1191,53 @@ namespace M4ControlsParser
             if (string.IsNullOrEmpty(aClass) || string.IsNullOrEmpty(aHKL) || aHKL == "NULL")
                 return string.Empty;
 
+            // primo tentativo: hkl definito nel corrente source
             string aHKLFolder = Path.GetDirectoryName(aFile);
-            string h = SearchHKL(aText, aClass, aHKL);
-            if (!string.IsNullOrEmpty(h))
-                return h;
+            string hklClass = SearchHKL(aText, aClass, aHKL);
+            if (!string.IsNullOrEmpty(hklClass))
+                return hklClass;
 
+            //secondo tentativo: sulla base della naming convention cerca nel file del document o client document
+            string aFilename = Path.GetFileNameWithoutExtension(aFile);
+            string aDocFileName = string.Empty;
+            if (aFilename.StartsWith("UI", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //naming convention: D[...].cpp->UI[...].cpp
+                if (File.Exists(Path.Combine(aHKLFolder, "D" + aFilename.Substring(2) + ".cpp")))
+                    aDocFileName = "D" + aFilename.Substring(2) + ".cpp";
+                //naming convention: CD[...].cpp->UI[...].cpp
+                else if (File.Exists(Path.Combine(aHKLFolder, "CD" + aFilename.Substring(2) + ".cpp")))
+                    aDocFileName = "CD" + aFilename.Substring(2) + ".cpp";
+                //naming convention: CD[...].cpp->UICD[...].cpp
+                else if (File.Exists(Path.Combine(aHKLFolder, aFilename.Substring(2) + ".cpp")))
+                    aDocFileName = aFilename.Substring(2) + ".cpp";
+            }
+            else if (aFilename.EndsWith("View", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //naming convention (TB Wizard): D[...].cpp->D[...]View.cpp
+                if (File.Exists(Path.Combine(aHKLFolder, aFilename.Substring(0, aFilename.Length - 4) + ".cpp")))
+                    aDocFileName = aFilename.Substring(0, aFilename.Length - 4) + ".cpp";
+            }
+            if (aDocFileName != string.Empty)
+            {
+                List<string> doc = cf.FindFiles(aHKLFolder, aDocFileName, false, ONATTACHDATA, aHKL);
+                foreach (string d in doc)
+                {
+                    hklClass = SearchHKL(d, aClass, aHKL);
+                    if (!string.IsNullOrEmpty(hklClass))
+                        return hklClass;
+                }
+            }
+
+            // terzo tentativo: cerco negli altri cpp generici del folder
             List<string> ls = cf.FindFiles(aHKLFolder, "*.cpp", false, ONATTACHDATA, aHKL);
             foreach (string s in ls)
             {
-                h = SearchHKL(s, aClass, aHKL);
-                if (!string.IsNullOrEmpty(h))
-                    return h;
+                hklClass = SearchHKL(s, aClass, aHKL);
+                if (!string.IsNullOrEmpty(hklClass))
+                    return hklClass;
             }
-            return h;
+            return hklClass;
         }
 
         private string SearchHKL(string aText, string aClass, string aHKL)
