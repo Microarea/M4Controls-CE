@@ -249,8 +249,8 @@ namespace M4ControlsParser
             int pTag = -1;
             int pBracketOpened = -1;
             int pBracketClosed = -1;
-            int pQuotationMarksOpened = -1;
-            int pQuotationMarksClosed = -1;
+            //int pQuotationMarksOpened = -1;
+            //int pQuotationMarksClosed = -1;
             int pSemicolon = -1;
             int pComma1 = -1;
             int pComma2 = -1;
@@ -313,8 +313,8 @@ namespace M4ControlsParser
 
                         // Namespace
                         pComma2 = aText.IndexOf(",", pComma1 + 1);
-                        pQuotationMarksOpened = aText.IndexOf("\"", pComma1 + 1);
-                        pQuotationMarksClosed = aText.IndexOf("\"", pQuotationMarksOpened + 1);
+                        //pQuotationMarksOpened = aText.IndexOf("\"", pComma1 + 1);
+                        //pQuotationMarksClosed = aText.IndexOf("\"", pQuotationMarksOpened + 1);
                         if (string.IsNullOrWhiteSpace(cl._namespace = FindIDD(cs._name, aText)))
                             if (string.IsNullOrWhiteSpace(cl._namespace = FindIDD(cs._name, aText, @"_NS_VIEW")))
                                 cl._namespace = cs._name;
@@ -428,12 +428,15 @@ namespace M4ControlsParser
                                 }
 
                                 // Runtime Class
-                                pComma1 = pComma2;
-                                pComma2 = aText.IndexOf(",", pComma1 + 1);
-                                pRuntimeClass = aText.IndexOf(RUNTIME_CLASS, pComma1 + 1);
-                                pBracketOpened = aText.IndexOf("(", pRuntimeClass + 1);
-                                pBracketClosed = aText.IndexOf(")", pBracketOpened);
-                                cl._runtimeclass = aText.Substring(pBracketOpened + 1, pBracketClosed - pBracketOpened - 1).Trim();
+                                //pComma1 = pComma2;
+                                //pComma2 = aText.IndexOf(",", pComma1 + 1);
+                                pRuntimeClass = aText.IndexOf(RUNTIME_CLASS, startAddLink);
+                                if (pRuntimeClass != -1)
+                                {
+                                    pBracketOpened = aText.IndexOf("(", pRuntimeClass + 1);
+                                    pBracketClosed = aText.IndexOf(")", pBracketOpened);
+                                    cl._runtimeclass = aText.Substring(pBracketOpened + 1, pBracketClosed - pBracketOpened - 1).Trim();
+                                }
 
                                 // Hotlink & Button
                                 //int temp = addlink.IndexOf("RUNTIME_CLASS");
