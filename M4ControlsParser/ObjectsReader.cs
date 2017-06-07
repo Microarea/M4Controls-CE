@@ -823,7 +823,7 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(b.Item1) && !string.IsNullOrEmpty(b.Item2))
                 return b;
 
-            List<string> ls = cf.FindFiles(aBodyEditFolder, "*.cpp", false, RUNTIME_CLASS, aClass);
+            List<string> ls = cf.FilesContent(aBodyEditFolder, "*.cpp", false, RUNTIME_CLASS, aClass);
             foreach (string s in ls)
             {
                 b = SearchBodyEditContainerClass(s, aClass);
@@ -910,7 +910,7 @@ namespace M4ControlsParser
 
             string d = string.Empty;
 
-            List<string> ls = cf.FindFiles(Path.GetDirectoryName(aFile), "*.h", true, aClass);
+            List<string> ls = cf.FilesContent(Path.GetDirectoryName(aFile), "*.h", true, aClass);
             foreach (string s in ls)
             {
                 d = SearchBodyEditContainerClassInHeader2(s, aClass);
@@ -956,7 +956,7 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(t.Item3))
                 return t;
 
-            List<string> ls = cf.FindFiles(aTileFolder, "*.cpp", false, RUNTIME_CLASS, aClass);
+            List<string> ls = cf.FilesContent(aTileFolder, "*.cpp", false, RUNTIME_CLASS, aClass);
             foreach (string s in ls)
             {
                 t = SearchTile(s, aClass);
@@ -1119,7 +1119,7 @@ namespace M4ControlsParser
 
             if (string.IsNullOrEmpty(r))
             {
-                var ff = cf.FindFile(Path.GetDirectoryName(aFile), "*.h", aFunction);
+                var ff = cf.FindSingleFile(Path.GetDirectoryName(aFile), "*.h", aFunction);
                 r = SearchRecordInHeader(ff.Item1, ff.Item2, aClass, aFunction);
                 if (string.IsNullOrEmpty(r))
                     r = SearchRecordInHeader(ff.Item1, ff.Item2, aClass, aFunction, false);
@@ -1200,43 +1200,24 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(hklClass))
                 return hklClass;
 
-            //secondo tentativo: sulla base della naming convention cerca nel file del document o client document
-            string aFilename = Path.GetFileNameWithoutExtension(aFile);
-            string aDocFileName = string.Empty;
-            if (aFilename.StartsWith("UI", StringComparison.InvariantCultureIgnoreCase))
+            //secondo tentativo: cerca per naming convention
+            string docFile = cf.SearchDocFile(aFile);
+            if (!string.IsNullOrEmpty(docFile))
             {
-                //naming convention: D[...].cpp->UI[...].cpp
-                if (File.Exists(Path.Combine(aHKLFolder, "D" + aFilename.Substring(2) + ".cpp")))
-                    aDocFileName = "D" + aFilename.Substring(2) + ".cpp";
-                //naming convention: CD[...].cpp->UI[...].cpp
-                else if (File.Exists(Path.Combine(aHKLFolder, "CD" + aFilename.Substring(2) + ".cpp")))
-                    aDocFileName = "CD" + aFilename.Substring(2) + ".cpp";
-                //naming convention: CD[...].cpp->UICD[...].cpp
-                else if (File.Exists(Path.Combine(aHKLFolder, aFilename.Substring(2) + ".cpp")))
-                    aDocFileName = aFilename.Substring(2) + ".cpp";
-            }
-            else if (aFilename.EndsWith("View", StringComparison.InvariantCultureIgnoreCase))
-            {
-                //naming convention (TB Wizard): D[...].cpp->D[...]View.cpp
-                if (File.Exists(Path.Combine(aHKLFolder, aFilename.Substring(0, aFilename.Length - 4) + ".cpp")))
-                    aDocFileName = aFilename.Substring(0, aFilename.Length - 4) + ".cpp";
-            }
-            if (aDocFileName != string.Empty)
-            {
-                List<string> doc = cf.FindFiles(aHKLFolder, aDocFileName, false, ONATTACHDATA, aHKL);
-                foreach (string d in doc)
+                string content = cf.FileContent(docFile, false, ONATTACHDATA, aHKL);
+                if (!string.IsNullOrEmpty(content))
                 {
-                    hklClass = SearchHKL(d, aClass, aHKL);
+                    hklClass = SearchHKL(content, aClass, aHKL);
                     if (!string.IsNullOrEmpty(hklClass))
                         return hklClass;
                 }
             }
 
             // terzo tentativo: cerco negli altri cpp generici del folder
-            List<string> ls = cf.FindFiles(aHKLFolder, "*.cpp", false, ONATTACHDATA, aHKL);
-            foreach (string s in ls)
+            List<string> contents = cf.FilesContent(aHKLFolder, "*.cpp", false, ONATTACHDATA, aHKL);
+            foreach (string content in contents)
             {
-                hklClass = SearchHKL(s, aClass, aHKL);
+                hklClass = SearchHKL(content, aClass, aHKL);
                 if (!string.IsNullOrEmpty(hklClass))
                     return hklClass;
             }
@@ -1291,10 +1272,23 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(d))
                 return d;
 
-            List<string> ls = cf.FindFiles(aDBTFolder, "*.cpp", false, ONATTACHDATA, aRecord);
-            foreach (string s in ls)
+            // cerca per naming convention
+            string docFile = cf.SearchDocFile(aFile);
+            if (!string.IsNullOrEmpty(docFile))
             {
-                d = SearchDBT(s, aClass, aRecord);
+                string content = cf.FileContent(docFile, false, ONATTACHDATA, aRecord);
+                if (!string.IsNullOrEmpty(content))
+                {
+                    d = SearchDBT(content, aClass, aRecord);
+                    if (!string.IsNullOrEmpty(d))
+                        return d;
+                }
+            }
+
+            List<string> contents = cf.FilesContent(aDBTFolder, "*.cpp", false, ONATTACHDATA, aRecord);
+            foreach (string content in contents)
+            {
+                d = SearchDBT(content, aClass, aRecord);
                 if (!string.IsNullOrEmpty(d))
                     return d;
             }
@@ -1350,7 +1344,20 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(d))
                 return d;
 
-            List<string> ls = cf.FindFiles(aDBTFolder, "*.cpp", true, aDBT + "::" + aDBT); 
+            // cerca per naming convention
+            string docFile = cf.SearchDocFile(aFile);
+            if (!string.IsNullOrEmpty(docFile))
+            {
+                string s = cf.FileContent(docFile, true, aDBT + "::" + aDBT);
+                if (!string.IsNullOrEmpty(s))
+                {
+                    d = SearchDBTNamespace(s, aDBT);
+                    if (!string.IsNullOrEmpty(d))
+                        return d;
+                }
+            }
+
+            List<string> ls = cf.FilesContent(aDBTFolder, "*.cpp", true, aDBT + "::" + aDBT); 
             foreach (string s in ls)
             {
                 d = SearchDBTNamespace(s, aDBT);

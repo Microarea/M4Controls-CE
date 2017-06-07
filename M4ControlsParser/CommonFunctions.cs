@@ -31,7 +31,7 @@ namespace M4ControlsParser
             { ")", "" }
         };
 
-        public Tuple<string, string> FindFile(string aFolder, string aPattern, string aTextToSearch1, string aTextToSearch2 = "")
+        public Tuple<string, string> FindSingleFile(string aFolder, string aPattern, string aTextToSearch1, string aTextToSearch2 = "")
         {
             string aText = string.Empty;
 
@@ -52,7 +52,29 @@ namespace M4ControlsParser
             return new Tuple<string, string>(string.Empty, string.Empty);
         }
 
-        public List<string> FindFiles(string aFolder, string aPattern, bool bNoSpaces, string aTextToSearch1, string aTextToSearch2 = "")
+        public string FileContent(string aFile, bool bNoSpaces, string aTextToSearch1, string aTextToSearch2 = "")
+        {
+            if (!File.Exists(aFile))
+                return string.Empty;
+
+            string aText = File.ReadAllText(aFile, Encoding.Default);
+
+            if (!aText.Contains(aTextToSearch1) || (!string.IsNullOrEmpty(aTextToSearch2) && !aText.Contains(aTextToSearch2)))
+                return string.Empty;
+
+            // faccio cosi' perche' la pulizia dei commenti a priori e' troppo lenta
+            aText = Clean(aText);
+            if (bNoSpaces)
+                aText = aText.Replace(" ", "");
+
+            // il codice che cercavo potrebbe essere stato commentato
+            if (!aText.Contains(aTextToSearch1) || (!string.IsNullOrEmpty(aTextToSearch2) && !aText.Contains(aTextToSearch2)))
+                return string.Empty;
+
+            return aText;
+        }
+
+        public List<string> FilesContent(string aFolder, string aPattern, bool bNoSpaces, string aTextToSearch1, string aTextToSearch2 = "")
         {
             List<string> lt = new List<string>();
             string aText = string.Empty;
@@ -61,16 +83,9 @@ namespace M4ControlsParser
             {
                 foreach (string f in Directory.GetFiles(aFolder, aPattern))
                 {
-                    aText = File.ReadAllText(f, Encoding.Default);
-                    if (aText.Contains(aTextToSearch1) && (string.IsNullOrEmpty(aTextToSearch2) || aText.Contains(aTextToSearch2)))
-                    {
-                        // faccio cosi' perche' la pulizia dei commenti a priori e' troppo lenta
-                        aText = Clean(aText);
-                        if (bNoSpaces)
-                            aText = aText.Replace(" ", "");
-                        if (aText.Contains(aTextToSearch1) && (string.IsNullOrEmpty(aTextToSearch2) || aText.Contains(aTextToSearch2)))
-                            lt.Add(aText);
-                    }
+                    aText = FileContent(f, bNoSpaces, aTextToSearch1, aTextToSearch2);
+                    if (!string.IsNullOrEmpty(aText))
+                        lt.Add(aText);
                 }
             }
             return lt;
@@ -254,6 +269,40 @@ namespace M4ControlsParser
                     return closeBracket;
             } while (controlBracket < closeBracket);
             return -1;
+        }
+
+        // cerca per naming convention il file che contiene la parte "document" (o client doc)
+        // del file di UI
+        public string SearchDocFile(string aUIFile)
+        {
+            string aFolder = Path.GetDirectoryName(aUIFile);
+            string aFilename = Path.GetFileNameWithoutExtension(aUIFile);
+            string aDocFileName = string.Empty;
+            if (aFilename.StartsWith("UI", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //naming convention: D[...].cpp->UI[...].cpp
+                aDocFileName = Path.Combine(aFolder,"D" + aFilename.Substring(2) + ".cpp");
+                if (File.Exists(aDocFileName))
+                    return aDocFileName;
+
+                //naming convention: CD[...].cpp->UI[...].cpp
+                aDocFileName = Path.Combine(aFolder, "CD" + aFilename.Substring(2) + ".cpp");
+                if (File.Exists(aDocFileName))
+                    return aDocFileName;
+
+                //naming convention: CD[...].cpp->UICD[...].cpp
+                aDocFileName = Path.Combine(aFolder, aFilename.Substring(2) + ".cpp");
+                if (File.Exists(aDocFileName))
+                    return aDocFileName;
+            }
+            else if (aFilename.EndsWith("View", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //naming convention (TB Wizard): D[...].cpp->D[...]View.cpp
+                aDocFileName = Path.Combine(aFolder, aFilename.Substring(0, aFilename.Length - 4) + ".cpp");
+                if (File.Exists(aDocFileName))
+                    return aDocFileName;
+            }
+            return string.Empty;
         }
     }
 }
