@@ -254,7 +254,7 @@ namespace M4ControlsParser
             int pSemicolon = -1;
             int pComma1 = -1;
             int pComma2 = -1;
-            //int pSeparator = -1;
+            int pSeparator = -1;
             int pRuntimeClass = -1;
             int pTemp = -1;
             string aTemp = string.Empty;
@@ -436,32 +436,63 @@ namespace M4ControlsParser
                                 cl._runtimeclass = aText.Substring(pBracketOpened + 1, pBracketClosed - pBracketOpened - 1).Trim();
 
                                 // Hotlink & Button
-                                int temp = addlink.IndexOf("RUNTIME_CLASS");
-                                int openSeparetor = -1;
-                                if (temp != -1)
-                                    openSeparetor = addlink.IndexOf(',', temp);
-                                int closeSeparetor;
+                                //int temp = addlink.IndexOf("RUNTIME_CLASS");
+                                //int openSeparetor = -1;
+                                //if (temp != -1)
+                                //    openSeparetor = addlink.IndexOf(',', temp);
+                                //int closeSeparetor;
 
-                                if (openSeparetor > 0)
+                                //if (openSeparetor > 0)
+                                //{
+                                //    if (addlink.Substring(openSeparetor + 1).Contains(","))
+                                //        closeSeparetor = addlink.IndexOf(',', openSeparetor + 1);
+                                //    else
+                                //        closeSeparetor = addlink.IndexOf(')', openSeparetor + 1);
+                                //    macro = "RUNTIME_CLASS";
+                                //    if (addlink.IndexOf(macro, temp + macro.Length) == -1 && addlink.IndexOf("NULL", temp + macro.Length) == -1)
+                                //    {
+                                //        macro = "m_p";
+                                //        cl._hkl = addlink.Substring(openSeparetor + 1, closeSeparetor - openSeparetor - 1).Trim();
+                                //        if (cl._hkl.Contains(macro))
+                                //            cl._hkl = cl._hkl.Substring(cl._hkl.IndexOf(macro) + macro.Length);
+                                //        macro = "NO_BUTTON";
+                                //        if (addlink.Contains(macro))
+                                //            cl._button = macro;
+                                //        else if (addlink.Contains("BTN_DEFAULT"))
+                                //            cl._button = "BTN_DEFAULT";
+                                //    }
+                                //}
+
+                                pComma1 = aText.IndexOf(",", pBracketClosed + 1);
+                                if (pComma1 != -1 && pComma1 < pSemicolon)
                                 {
-                                    if (addlink.Substring(openSeparetor + 1).Contains(","))
-                                        closeSeparetor = addlink.IndexOf(',', openSeparetor + 1);
-                                    else
-                                        closeSeparetor = addlink.IndexOf(')', openSeparetor + 1);
-                                    macro = "RUNTIME_CLASS";
-                                    if (addlink.IndexOf(macro, temp + macro.Length) == -1 && addlink.IndexOf("NULL", temp + macro.Length) == -1)
+                                    pComma2 = aText.IndexOf(",", pComma1 + 1);
+                                    if (pComma2 == -1 || pComma2 > pSemicolon)
+                                        pComma2 = pSemicolon;
+
+                                    pSeparator = aText.IndexOf("->", pComma1 + 1);
+                                    if (pSeparator == -1)
                                     {
-                                        macro = "m_p";
-                                        cl._hkl = addlink.Substring(openSeparetor + 1, closeSeparetor - openSeparetor - 1).Trim();
-                                        if (cl._hkl.Contains(macro))
-                                            cl._hkl = cl._hkl.Substring(cl._hkl.IndexOf(macro) + macro.Length);
-                                        macro = "NO_BUTTON";
-                                        if (addlink.Contains(macro))
-                                            cl._button = macro;
-                                        else if (addlink.Contains("BTN_DEFAULT"))
-                                            cl._button = "BTN_DEFAULT";
+                                        var hkl = cf.HKL(aText.Substring(pComma1 + 1, pComma2 - pComma1 - 1).Trim());
+                                        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
+                                        cl._button = hkl.Item2;
+                                    }
+                                    else if (pSeparator < pSemicolon)
+                                    {
+                                        var hkl = cf.HKL(aText.Substring(pSeparator + 2, pComma2 - pSeparator - 2).Trim());
+                                        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
+                                        cl._button = hkl.Item2;
+                                    }
+                                    else
+                                    {
+                                        //codice che mette il nome classe
+                                        var hkl = cf.HKL(aText.Substring(pComma1 + 1, pComma2 - pComma1 - 1).Trim());
+                                        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
+                                        cl._button = hkl.Item2;
+
                                     }
                                 }
+                                
                                 // SetRange SetCtrlSize SetCtrlMaxLen
                                 int next = aText.IndexOf(ADDLINK, pSemicolon);
                                 int graffa = aText.IndexOf("}", pSemicolon);
@@ -473,37 +504,6 @@ namespace M4ControlsParser
                                     if (string.IsNullOrWhiteSpace(cl._chars))
                                         SetCtrlMaxLen(text, out cl._chars);
                                 }
-                                #region codice_commentato
-                                //pComma1 = aText.IndexOf(",", pBracketClosed + 1);
-                                //if (pComma1 != -1 && pComma1 < pSemicolon)
-                                //{
-                                //    pComma2 = aText.IndexOf(",", pComma1 + 1);
-                                //    if (pComma2 == -1 || pComma2 > pSemicolon)
-                                //        pComma2 = pSemicolon;
-
-                                //    pSeparator = aText.IndexOf("->", pComma1 + 1);
-                                //    if (pSeparator == -1)
-                                //    {
-                                //        var hkl = cf.HKL(aText.Substring(pComma1 + 1, pComma2 - pComma1 - 1).Trim());
-                                //        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
-                                //        cl._button = hkl.Item2;
-                                //    }
-                                //    else if (pSeparator < pSemicolon)
-                                //    {
-                                //        var hkl = cf.HKL(aText.Substring(pSeparator + 2, pComma2 - pSeparator - 2).Trim());
-                                //        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
-                                //        cl._button = hkl.Item2;
-                                //    }
-                                //    else
-                                //    {
-                                //        codice che mette il nome classe
-                                //        var hkl = cf.HKL(aText.Substring(pComma1 + 1, pComma2 - pComma1 - 1).Trim());
-                                //        cl._hkl = cf.Trim(SearchHKL(aFile, aText, cs._name, hkl.Item1), ")", "(");
-                                //        cl._button = hkl.Item2;
-
-                                //    }
-                                //}
-                                #endregion
                             }
                             else
                                 System.Diagnostics.Debug.WriteLine("\tError:  " + cl._idc);
