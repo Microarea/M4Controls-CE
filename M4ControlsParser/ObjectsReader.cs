@@ -81,15 +81,7 @@ namespace M4ControlsParser
             if (!Directory.Exists(r))
                 return false;
 
-            int aCurrentFileNumber = 0;
-            foreach (string d in Directory.GetDirectories(r))
-            {
-                foreach (string f in Directory.GetFiles(d, "*.cpp"))
-                    aCurrentFileNumber++;
-            }
-
- 
-            aCurrentFileNumber = 0;
+            // crca files nelle sottocarella (struttura standard)
             foreach (string d in Directory.GetDirectories(r))
             {
                 foreach (string f in Directory.GetFiles(d, "*.cpp"))
@@ -97,6 +89,12 @@ namespace M4ControlsParser
                     if (!LoadFile(aModule, f))
                         return false;
                 }
+            }
+            // cerca files nella corrente cartella (non standard, ma usata)
+            foreach (string f in Directory.GetFiles(r, "*.cpp"))
+            {
+                if (!LoadFile(aModule, f))
+                    return false;
             }
             System.Diagnostics.Debug.WriteLine("===============================================================");
             return true;
