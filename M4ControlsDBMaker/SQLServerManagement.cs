@@ -13,7 +13,7 @@ namespace M4ControlsDBMaker
 
         public static string Connection
         {
-            get { return string.Format(@"Data Source={0}; Initial Catalog=M4ControlsNew; Integrated Security=True", System.Environment.MachineName); }
+            get { return string.Format(@"Data Source={0}; Initial Catalog=M4ControlsCE; Integrated Security=True", System.Environment.MachineName); }
         }
         public System.Data.ConnectionState  State{get{ return conn.State; } }
 
@@ -42,7 +42,7 @@ namespace M4ControlsDBMaker
             conn.Close();
             return true;
         }
-        public static bool ExistDB(string nameDB = "M4ControlsNew")
+        public static bool ExistDB(string nameDB = "M4ControlsCE")
         {
             bool result = false; 
             SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", System.Environment.MachineName));
@@ -59,7 +59,7 @@ namespace M4ControlsDBMaker
             }
             return result;
         }
-        public static bool ExistDBTable(string table,string nameDB = "M4ControlsNew")
+        public static bool ExistDBTable(string table,string nameDB = "M4ControlsCE")
         {
             bool result = false;
             SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", System.Environment.MachineName));

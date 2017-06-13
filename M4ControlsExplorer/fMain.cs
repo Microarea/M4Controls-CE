@@ -25,7 +25,7 @@ namespace M4ControlsExplorer
         private List<_CONTROL> mControls = new List<_CONTROL>();
         
 
-        private DBManager mDBManager = new DBManager("M4ControlsNew");
+        private DBManager mDBManager = new DBManager("M4ControlsCE");
         private ModulesReader mModuleReader = new ModulesReader();
         private ObjectsReader mObjectReader = new ObjectsReader();
         private TreeNode mCurrentNode = null;
