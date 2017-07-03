@@ -26,7 +26,13 @@ namespace M4ControlsParser
         public bool LoadJson(string aIDD, string aNamespace, string aTileSize, int aTileStyle, string aTileText, string aSourceFilename, out string aJsonFilename)
         {
             mErrors.Clear();
-            string aRootFolder = Path.GetDirectoryName(Path.GetDirectoryName(aSourceFilename));
+            string aRootFolder = Path.GetDirectoryName(aSourceFilename);
+
+            // Se non esiste nella cartella del file la cartella ModuleObjects va ancora su di un livello
+            // (dovrebbe essre la situazione standard, vedi Mago)
+            if (!Directory.Exists(Path.Combine(aRootFolder, "ModuleObjects")))
+                aRootFolder = Path.GetDirectoryName(aRootFolder);
+
             string aFileName = aIDD + ".tbjson";
 
             aJsonFilename = SearchJsonFile(aRootFolder, aFileName);

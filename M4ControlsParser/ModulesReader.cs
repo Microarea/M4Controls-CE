@@ -19,12 +19,17 @@ namespace M4ControlsParser
         {
             mModules.Clear();
             if (aERP != string.Empty && Directory.Exists(aERP))
+                SearchModule(aERP);
+        }
+
+        public void SearchModule(string aFolder)
+        {
+            foreach (string m in Directory.GetDirectories(aFolder))
             {
-                foreach (string m in Directory.GetDirectories(aERP))
-                {
-                    if (File.Exists(Path.Combine(m, "Module.Config")))
-                        mModules.Add(Path.GetFileName(m));
-                }
+                if (File.Exists(Path.Combine(m, "Module.Config")))
+                    mModules.Add(Path.GetFileName(m));
+                else
+                    SearchModule(m);
             }
         }
 
