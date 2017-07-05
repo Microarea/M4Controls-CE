@@ -17,6 +17,7 @@ namespace M4ControlsParser
         private JArray mColumnsArray = null;
         private DBManager mDB = null;
         private List<string> mErrors = new List<string>();
+        private List<string> mVariables = new List<string>();
 
         public JsonManager(DBManager aDB)
         {
@@ -26,7 +27,9 @@ namespace M4ControlsParser
         public bool LoadJson(string aIDD, string aNamespace, string aTileSize, int aTileStyle, string aTileText, string aSourceFilename, out string aJsonFilename)
         {
             mErrors.Clear();
-            string aRootFolder = Path.GetDirectoryName(Path.GetDirectoryName(aSourceFilename));
+            string aRootFolder = Path.GetDirectoryName(aSourceFilename);
+            if (!Directory.Exists(Path.Combine(aRootFolder, "ModuleObjects")))
+                aRootFolder = Path.GetDirectoryName(aRootFolder);
             string aFileName = aIDD + ".tbjson";
 
             aJsonFilename = SearchJsonFile(aRootFolder, aFileName);
@@ -73,6 +76,11 @@ namespace M4ControlsParser
             return mTokenJson.ToString();
         }
 
+        public List<string> GetVariables()
+        {
+            return mVariables;
+        }
+
         public List<string> GetErrors()
         {
             return mErrors;
@@ -88,7 +96,10 @@ namespace M4ControlsParser
             if (!string.IsNullOrEmpty(aDBTNamespace) && !string.IsNullOrEmpty(aFieldNameSpace))
                 aDataSource = aDBTNamespace + "." + aFieldNameSpace;
             else if (!string.IsNullOrEmpty(aFieldNameSpace))
+            {
                 aDataSource = aFieldNameSpace;
+                mVariables.Add(aFieldNameSpace);
+            }
             else
                 aDataSource = aDBTNamespace;
 

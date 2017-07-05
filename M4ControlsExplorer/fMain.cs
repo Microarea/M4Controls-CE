@@ -675,8 +675,13 @@ namespace M4ControlsExplorer
             }
 
             errors += "OK!";
+            if (jm.GetVariables().Count > 0)
+                errors += "\r\n\r\nDOCUMENT VARIABLES:\r\n";
+            foreach (string s in jm.GetVariables())
+                errors += s + "\r\n";
+
             if (jm.GetErrors().Count > 0)
-                errors += "ERRORS:\r\n\r\n";
+                errors += "\r\nERRORS:\r\n\r\n";
             foreach (string s in jm.GetErrors())
                 errors += s + "\r\n";
             return new Tuple<bool, string, string, string>(false, jm.GetJson(), errors, jsonFilename);
