@@ -1,3 +1,18 @@
+/*
+M4-Controls CE - Tool di completamento delle descrizioni Json a partire dai source C++ 
+Copyright (C) 2017 Microarea s.p.a.
+
+This program is free software: you can redistribute it and/or modify it under the 
+terms of the GNU General Public License as published by the Free Software Foundation, 
+either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+or FITNESS FOR A PARTICULAR PURPOSE. 
+
+See the GNU General Public License for more details.
+*/
+
 using System;
 using System.IO;
 using System.Collections;
@@ -1486,10 +1501,16 @@ namespace M4ControlsParser
             try
             {
                 int start = aText.IndexOf(string.Format("{0}::{0}", className));
+                if (start == -1)
+                    return "";
                 start = aText.IndexOf(macro, start);
+                if (start == -1)
+                    return "";
                 start = aText.IndexOf("(\"", start);
+                if (start == -1)
+                    return "";
                 int end = aText.IndexOf("\")", start);
-                if (start > end)
+                if (end == -1 || start > end)
                     return "";
                 macro =aText.Substring(start+2, end - start-2);
             }
