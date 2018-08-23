@@ -26,9 +26,11 @@ namespace M4ControlsDBMaker
         private static SqlConnection conn = null;
         private static SqlDataReader reader;
 
+        private static string DatabaseServer = Environment.MachineName;
+
         public static string Connection
         {
-            get { return string.Format(@"Data Source={0}; Initial Catalog=M4ControlsCE; Integrated Security=True", System.Environment.MachineName); }
+            get { return string.Format(@"Data Source={0}; Initial Catalog=M4ControlsCE; Integrated Security=True", DatabaseServer); }
         }
         public System.Data.ConnectionState  State{get{ return conn.State; } }
 
@@ -60,7 +62,7 @@ namespace M4ControlsDBMaker
         public static bool ExistDB(string nameDB = "M4ControlsCE")
         {
             bool result = false; 
-            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", System.Environment.MachineName));
+            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", DatabaseServer));
             SqlCommand c = new SqlCommand("SELECT  name FROM sys.databases WHERE sys.databases.name = @nameDB",myConn);
             c.Parameters.Add(new SqlParameter("nameDB", nameDB));
             using (myConn)
@@ -77,7 +79,7 @@ namespace M4ControlsDBMaker
         public static bool ExistDBTable(string table,string nameDB = "M4ControlsCE")
         {
             bool result = false;
-            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", System.Environment.MachineName));
+            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", DatabaseServer));
             SqlCommand c = new SqlCommand(string.Format("SELECT TABLE_NAME FROM {0}.INFORMATION_SCHEMA.Tables",nameDB), myConn);
             using (myConn)
             {
@@ -101,7 +103,7 @@ namespace M4ControlsDBMaker
         {
             bool result = true;
             SqlCommand myCommand;
-            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", System.Environment.MachineName));
+            SqlConnection myConn = new SqlConnection(string.Format("Server={0};Integrated security=True;database=master", DatabaseServer));
             if (!ExistDB())
             {
                 string str;
